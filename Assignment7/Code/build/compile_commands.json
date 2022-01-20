@@ -1,0 +1,27 @@
+[
+{
+  "directory": "D:/Coding/CG/Assignment7/Code/build",
+  "command": "D:\\Mingw\\mingw64\\bin\\x86_64-w64-mingw32-g++.exe   -g -std=gnu++17 -o CMakeFiles\\RayTracing.dir\\main.cpp.obj -c D:\\Coding\\CG\\Assignment7\\Code\\main.cpp",
+  "file": "D:/Coding/CG/Assignment7/Code/main.cpp"
+},
+{
+  "directory": "D:/Coding/CG/Assignment7/Code/build",
+  "command": "D:\\Mingw\\mingw64\\bin\\x86_64-w64-mingw32-g++.exe   -g -std=gnu++17 -o CMakeFiles\\RayTracing.dir\\Vector.cpp.obj -c D:\\Coding\\CG\\Assignment7\\Code\\Vector.cpp",
+  "file": "D:/Coding/CG/Assignment7/Code/Vector.cpp"
+},
+{
+  "directory": "D:/Coding/CG/Assignment7/Code/build",
+  "command": "D:\\Mingw\\mingw64\\bin\\x86_64-w64-mingw32-g++.exe   -g -std=gnu++17 -o CMakeFiles\\RayTracing.dir\\Scene.cpp.obj -c D:\\Coding\\CG\\Assignment7\\Code\\Scene.cpp",
+  "file": "D:/Coding/CG/Assignment7/Code/Scene.cpp"
+},
+{
+  "directory": "D:/Coding/CG/Assignment7/Code/build",
+  "command": "D:\\Mingw\\mingw64\\bin\\x86_64-w64-mingw32-g++.exe   -g -std=gnu++17 -o CMakeFiles\\RayTracing.dir\\BVH.cpp.obj -c D:\\Coding\\CG\\Assignment7\\Code\\BVH.cpp",
+  "file": "D:/Coding/CG/Assignment7/Code/BVH.cpp"
+},
+{
+  "directory": "D:/Coding/CG/Assignment7/Code/build",
+  "command": "D:\\Mingw\\mingw64\\bin\\x86_64-w64-mingw32-g++.exe   -g -std=gnu++17 -o CMakeFiles\\RayTracing.dir\\Renderer.cpp.obj -c D:\\Coding\\CG\\Assignment7\\Code\\Renderer.cpp",
+  "file": "D:/Coding/CG/Assignment7/Code/Renderer.cpp"
+}
+]
