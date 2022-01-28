@@ -1,3 +1,0 @@
-/home/cs18/Desktop/pa05/build/CMakeFiles/rebuild_cache.dir
-/home/cs18/Desktop/pa05/build/CMakeFiles/RayTracing.dir
-/home/cs18/Desktop/pa05/build/CMakeFiles/edit_cache.dir

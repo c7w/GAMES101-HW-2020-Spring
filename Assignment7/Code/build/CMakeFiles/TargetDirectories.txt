@@ -1,3 +1,0 @@
-D:/Coding/CG/Assignment7/Code/build/CMakeFiles/RayTracing.dir
-D:/Coding/CG/Assignment7/Code/build/CMakeFiles/edit_cache.dir
-D:/Coding/CG/Assignment7/Code/build/CMakeFiles/rebuild_cache.dir
