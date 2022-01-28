@@ -103,7 +103,7 @@ namespace CGL {
 
                 Vector2D a = m->forces / m->mass + gravity;
 
-                m->position = temp_position + (1-5e-5) * (m->position - m->last_position) + a * delta_t * delta_t;
+                m->position = temp_position + (1-5e-5) * (m->position - m->last_position) >+ a * delta_t * delta_t;
                 m->last_position = temp_position;
 
                 // TODO (Part 4): Add global Verlet damping
