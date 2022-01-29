@@ -22,12 +22,41 @@ Eigen::Matrix4f get_view_matrix(Eigen::Vector3f eye_pos)
 Eigen::Matrix4f get_model_matrix(float rotation_angle)
 {
     Eigen::Matrix4f model = Eigen::Matrix4f::Identity();
+    const double pi = 3.14159265358979;
+    rotation_angle = rotation_angle * 2*pi / 360;
 
     // TODO: Implement this function
     // Create the model matrix for rotating the triangle around the Z axis.
     // Then return it.
+    Eigen::Matrix4f rotation;
+    rotation << cos(rotation_angle), -sin(rotation_angle), 0, 0,
+                sin(rotation_angle), cos(rotation_angle), 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1;
+    model = rotation * model;
 
     return model;
+}
+
+Eigen::Matrix4f get_rotation(Vector3f Axis, float angle) {
+
+    // Axis transformation
+    Vector3f newZ = Axis / sqrt(Axis.dot(Axis)); // Normalization
+    Vector3f newX = newZ.cross((Vector3f){1,0,0});
+    Vector3f newY = newZ.cross(newX);
+    newX = newX / sqrt(newX.dot(newX));
+    newY = newY / sqrt(newY.dot(newY));
+
+    Matrix4f axis_transformation;
+    axis_transformation << newX[0], newY[0], newZ[0], 0,
+                           newX[1], newY[1], newZ[1], 0,
+                           newX[2], newY[2], newZ[2], 0,
+                           0,0,0,1;
+
+
+    return axis_transformation.inverse() 
+            * get_model_matrix(angle) 
+            * axis_transformation;
 }
 
 Eigen::Matrix4f get_projection_matrix(float eye_fov, float aspect_ratio,
@@ -40,9 +69,33 @@ Eigen::Matrix4f get_projection_matrix(float eye_fov, float aspect_ratio,
     // TODO: Implement this function
     // Create the projection matrix for the given parameters.
     // Then return it.
+    float l, r, b, t, n, f;
+    n = zNear; f=zFar;
+    t = abs(n) * tan(eye_fov/2);
+    b = -t;
+    r = t * aspect_ratio;
+    l = -r;
+
+    Eigen::Matrix4f persp2ortho, ortho, m1, m2;
+    persp2ortho << n,0,0,0,
+                   0,n,0,0,
+                   0,0,n+f,-n*f,
+                   0,0,1,0;
+    m1 << 2/(r-l),0,0,0,
+          0, 2/(t-b),0,0,
+          0,0,2/(n-f),0,
+          0,0,0,1;
+    m2 << 1,0,0,-(r+l)/2,
+          0,1,0,-(t+b)/2,
+          0,0,1,-(n+f)/2,
+          0,0,0,1;
+    ortho = m1*m2;
+    projection = ortho * persp2ortho;
 
     return projection;
 }
+
+
 
 int main(int argc, const char** argv)
 {
@@ -77,7 +130,7 @@ int main(int argc, const char** argv)
     if (command_line) {
         r.clear(rst::Buffers::Color | rst::Buffers::Depth);
 
-        r.set_model(get_model_matrix(angle));
+        r.set_model(get_rotation({1,1,1}, angle));
         r.set_view(get_view_matrix(eye_pos));
         r.set_projection(get_projection_matrix(45, 1, 0.1, 50));
 
@@ -93,7 +146,8 @@ int main(int argc, const char** argv)
     while (key != 27) {
         r.clear(rst::Buffers::Color | rst::Buffers::Depth);
 
-        r.set_model(get_model_matrix(angle));
+        r.set_model(get_rotation({1,1,1}, angle));
+        // r.set_model(get_model_matrix(angle));
         r.set_view(get_view_matrix(eye_pos));
         r.set_projection(get_projection_matrix(45, 1, 0.1, 50));
 

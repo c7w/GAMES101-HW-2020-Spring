@@ -1,3 +1,0 @@
-/mnt/d/Coding/CG/Assignment7/Code/build-wsl/CMakeFiles/rebuild_cache.dir
-/mnt/d/Coding/CG/Assignment7/Code/build-wsl/CMakeFiles/edit_cache.dir
-/mnt/d/Coding/CG/Assignment7/Code/build-wsl/CMakeFiles/RayTracing.dir

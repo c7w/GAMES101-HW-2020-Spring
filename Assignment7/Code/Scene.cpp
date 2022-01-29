@@ -72,52 +72,58 @@ Vector3f Scene::castRay(const Ray &ray, int depth) const
 
 Vector3f shade(const Scene* scene, Intersection p, Vector3f dir) 
 {
-    // Direct light contributions
-    Vector3f L_dir(0.0);
-    Intersection inter;
-    float dir_pdf;
-    scene->sampleLight(inter, dir_pdf);
 
-    auto orig = p.coords;
-    Ray r(orig, normalize(inter.coords - orig));
-    Intersection test_inter = scene->intersect(r);
+    if (p.m->hasEmission()) {
 
-    if (fabs((test_inter.coords - inter.coords).norm()) < 0.0005 ) {
-        // L_dir = emit * eval(wo, ws, N) * dot(ws, N) * dot(ws,NN) / |x-p|^2 / pdf_light
-        L_dir = inter.emit * p.m->eval(r.direction, dir, p.normal) *
-                std::max(dotProduct(r.direction, p.normal), 0.0f) *
-                std::max(dotProduct(-r.direction, inter.normal), 0.0f) /
-                (inter.coords - p.coords).norm() /
-                (inter.coords - p.coords).norm() / dir_pdf;
-    }
+        return p.m->getEmission();
+    
+    } else {
+    
+        // Direct light contributions
+        Vector3f L_dir(0.0);
+        Intersection inter;
+        float dir_pdf;
+        scene->sampleLight(inter, dir_pdf);
 
-    // Indirect light contributions
-    Vector3f L_indir(0.0);
-
-    if (get_random_float() < scene->RussianRoulette) {
-        /*
-            10 wi = sample(wo, N)
-            11 Trace a ray r(p, wi)
-            12 If ray r hit a non -emitting object at q
-            13 L_indir = shade(q, wi) * eval(wo, wi, N) * dot(wi, N) / pdf(wo, wi, N) / RussianRoulette
-        */
-        Vector3f wi = normalize(p.m->sample(dir, p.normal));
-
-        Ray r(p.coords, wi);
+        auto orig = p.coords;
+        Ray r(orig, normalize(inter.coords - orig));
         Intersection test_inter = scene->intersect(r);
-        if(test_inter.happened && test_inter.obj->hasEmit() == false) {
-            auto q = test_inter.coords;
-            L_indir = shade(scene, test_inter, -wi) *
-                      p.m->eval(wi, dir, p.normal) * 
-                      std::max(dotProduct(wi, p.normal), 0.0f) /
-                      p.m->pdf(wi, dir, p.normal) / scene->RussianRoulette;
+
+        if (fabs((test_inter.coords - inter.coords).norm()) < 0.001 ) {
+            // L_dir = emit * eval(wo, ws, N) * dot(ws, N) * dot(ws,NN) / |x-p|^2 / pdf_light
+            L_dir = inter.emit * p.m->eval(r.direction, dir, p.normal) *
+                    (dotProduct(r.direction, p.normal)) *
+                    (dotProduct(-r.direction, inter.normal)) /
+                    (inter.coords - p.coords).norm() /
+                    (inter.coords - p.coords).norm() / dir_pdf;
         }
+
+        // Indirect light contributions
+        Vector3f L_indir(0.0);
+
+        if (get_random_float() < scene->RussianRoulette) {
+            /*
+                10 wi = sample(wo, N)
+                11 Trace a ray r(p, wi)
+                12 If ray r hit a non -emitting object at q
+                13 L_indir = shade(q, wi) * eval(wo, wi, N) * dot(wi, N) / pdf(wo, wi, N) / RussianRoulette
+            */
+            Vector3f wi = normalize(p.m->sample(dir, p.normal));
+
+            Ray r(p.coords, wi);
+            Intersection test_inter = scene->intersect(r);
+            if(test_inter.happened && test_inter.obj->hasEmit() == false) {
+                auto q = test_inter.coords;
+                L_indir = shade(scene, test_inter, -wi) *
+                        p.m->eval(wi, dir, p.normal) * 
+                        (dotProduct(wi, p.normal)) /
+                        p.m->pdf(wi, dir, p.normal) / scene->RussianRoulette;
+            }
+        }
+        return L_dir + L_indir;
     }
 
-    // Emission
-    Vector3f L_e = p.m->hasEmission() ? p.m->getEmission() : Vector3f(0.0);
-
-    return L_dir + L_indir + L_e;
+    
 
 
 }
